@@ -2,6 +2,7 @@ package com.example.demo.controller;
 import com.example.demo.DTO.AnimalDTO;
 import com.example.demo.entities.Animal;
 import com.example.demo.repository.IAnimalRegistrationService;
+import com.example.demo.service.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,31 +18,21 @@ import java.util.Optional;
 @RequestMapping("/api/animals")
 public class AnimalRegistrationController {
     @Autowired
-    private IAnimalRegistrationService animalRegistrationService;
+    private GrpcClient animalRegistrationService;
 
     @GetMapping("/{id}")
     public AnimalDTO getAnimalById(@PathVariable int id) {
-        Optional<Animal> animal = animalRegistrationService.findById(id);
-        return new AnimalDTO(animal.orElse(new Animal()));
+        Optional<AnimalDTO> animal = animalRegistrationService.findById(id);
+        return animal.orElse(null);
     }
 
     @GetMapping("/date/{date}")
     public List<AnimalDTO> getAnimalByDate(@PathVariable String date) {
-        List<Animal> animals = animalRegistrationService.findByDate(LocalDate.parse(date));
-        List<AnimalDTO> animalDTOs = new ArrayList<>();
-        for(Animal animal : animals) {
-            animalDTOs.add(new AnimalDTO(animal));
-        }
-        return animalDTOs;
+        return animalRegistrationService.findByDate(LocalDate.parse(date));
     }
 
     @GetMapping("/origin/{origin}")
     public List<AnimalDTO> getAnimalByOrigin(@PathVariable String origin) {
-        List<Animal> animals = animalRegistrationService.findByOrigin(origin);
-        List<AnimalDTO> animalDTOs = new ArrayList<>();
-        for(Animal animal : animals) {
-            animalDTOs.add(new AnimalDTO(animal));
-        }
-        return animalDTOs;
+        return animalRegistrationService.findByOrigin(origin);
     }
 }

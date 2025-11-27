@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.demo.generated";
+
+package slaughterhouse;
+service SlaughterHouse
+{
+  rpc FindById(AnimalRequest) returns (AnimalRes);
+  rpc FindByDate(DateRequest) returns (AnimalListResponse);
+  rpc FindByOrigin(OriginRequest) returns (AnimalListResponse);
+  rpc GetAnimalsByProduct(ProductRequest) returns (AnimalListResponse);
+  rpc GetProductsByAnimal(AnimalRequest) returns (ProductListResponse);
+}
+
+message DateRequest {
+  google.protobuf.Timestamp date = 1;
+}
+
+message OriginRequest {
+  string origin = 1;
+}
+
+message ProductRequest {
+  int32 product_id = 1;
+}
+
+message AnimalRequest {
+  int32 animal_id = 1;
+}
+
+message AnimalRes
+{
+  int32 id = 1;
+  int32 weight = 2;
+  string origin = 3;
+  string type = 4;
+}
+
+message AnimalPart
+{
+  int32 part_id = 1;
+  double weight = 2;
+  string type_part = 3;
+  int32 animal_id = 4;
+}
+
+message Tray
+{
+  int32 tray_id = 1;
+  double max_weight = 2;
+  repeated AnimalPart animal_parts = 3;
+}
+
+message ProductRes
+{
+  int32 id = 1;
+}
+
+message AnimalListResponse {
+  repeated AnimalRes animals = 1;
+}
+
+message ProductListResponse {
+  repeated ProductRes products = 1;
+}
